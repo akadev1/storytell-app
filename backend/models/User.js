@@ -16,6 +16,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  location: {
+    latitude: {
+      type: Number,
+      required: false,
+    },
+    longitude: {
+      type: Number,
+      required: false,
+    },
+    timestamp: {
+      type: Date,
+      required: false,
+    },
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -30,6 +44,19 @@ userSchema.pre('save', async function (next) {
     next(err);
   }
 });
+
+userSchema.methods.updateLocation = function (latitude, longitude) {
+  this.location = {
+    latitude,
+    longitude,
+    timestamp: new Date(),
+  };
+  return this.save();
+};
+
+userSchema.methods.getLocation = function () {
+  return this.location;
+};
 
 const User = mongoose.model('User', userSchema);
 

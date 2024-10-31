@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Editor from './components/Editor';
@@ -9,6 +9,35 @@ import Register from './components/Register';
 
 const App = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  let ws;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      ws = new WebSocket('ws://localhost:5000');
+
+      ws.onopen = () => {
+        console.log('WebSocket connection established');
+      };
+
+      ws.onmessage = (event) => {
+        console.log('Received message:', event.data);
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket connection closed');
+      };
+
+      return () => {
+        if (ws) {
+          ws.close();
+        }
+      };
+    }
+  }, [isAuthenticated]);
 
   return (
     <Router>

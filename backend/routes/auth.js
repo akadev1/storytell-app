@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { exec } = require('child_process');
 
 const router = express.Router();
 
@@ -46,6 +47,22 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Route to trigger the Python script
+router.post('/trigger-localization', async (req, res) => {
+  exec('python3 backend/scripts/localization_automation.py', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing script: ${error.message}`);
+      return res.status(500).json({ error: 'Failed to execute script' });
+    }
+    if (stderr) {
+      console.error(`Script stderr: ${stderr}`);
+      return res.status(500).json({ error: 'Script execution error' });
+    }
+    console.log(`Script stdout: ${stdout}`);
+    res.status(200).json({ message: 'Script executed successfully' });
+  });
 });
 
 module.exports = router;
