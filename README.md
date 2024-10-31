@@ -1,4 +1,11 @@
 # Storytell App
+uvicorn backend.api.app:app --reload
+INFO:     Will watch for changes in these directories: ['C:\\Users\\start\\storytell-app']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [15068] using StatReload
+INFO:     Started server process [3892]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
 
 ## Description
 A web application for creating and sharing interactive stories.
